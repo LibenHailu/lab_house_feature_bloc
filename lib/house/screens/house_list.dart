@@ -1,11 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:labjobfeature/house/bloc/bloc.dart';
 import 'package:labjobfeature/house/house.dart';
+import 'package:labjobfeature/models/constants.dart';
 
-class HouseList extends StatelessWidget {
+class HouseList extends StatefulWidget {
   static const routeName = '/';
+
+  @override
+  _HouseListState createState() => _HouseListState();
+}
+  class _HouseListState extends State<HouseList>{
   @override
   Widget build(BuildContext context) {
     //header section
@@ -59,6 +66,9 @@ class HouseList extends StatelessWidget {
         )
       ], borderRadius: BorderRadius.circular(10.0), color: Colors.white),
       child: TextField(
+        showCursor: true,
+        readOnly: true,
+        cursorColor: Theme.of(context).accentColor,
         decoration: InputDecoration(
             suffixIcon: Icon(
               Icons.search,
@@ -67,6 +77,9 @@ class HouseList extends StatelessWidget {
             ),
             border: InputBorder.none,
             hintText: 'where do you want to live?'),
+        onTap: () {
+          showSearch(context: context, delegate: DataSearch());
+        },
       ),
     );
 
@@ -307,136 +320,6 @@ class HouseList extends StatelessWidget {
       ),
     );
 
-//    //    house item  builder
-//    Container _houseBuilder(String imgPath, String item, String city, context) {
-////      double addressWidth = 200;
-////      double mortgageWidth = 100;
-//      return Container(
-//        padding: EdgeInsets.symmetric(horizontal: 20),
-//        margin: EdgeInsets.only(bottom: 20, top: 20),
-//        child: Column(
-//          children: [
-//            ClipRRect(
-//              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//              child: Image.asset(
-//                imgPath,
-//                height: 200,
-//                width: double.infinity,
-//                fit: BoxFit.cover,
-//              ),
-//            ),
-//            Container(
-//              padding: EdgeInsets.only(top: 15),
-//              child: Row(
-//                crossAxisAlignment: CrossAxisAlignment.start,
-//                children: [
-//                  Column(
-//                    crossAxisAlignment: CrossAxisAlignment.start,
-//                    children: [
-//                      Container(
-//                        padding: EdgeInsets.only(bottom: 2),
-////                        width: addressWidth,
-//                        child: Flexible(
-//                          child: Text(
-//                            'Victoria Apartments',
-//                            style: Theme.of(context).textTheme.headline3,
-//                          ),
-//                        ),
-//                      ),
-//                      Row(
-//                        crossAxisAlignment: CrossAxisAlignment.center,
-//                        children: [
-//                          Padding(
-//                            padding: EdgeInsets.only(right: 8),
-//                            child: Row(
-//                              children: [
-//                                SvgPicture.asset(
-//                                  'images/bed.svg',
-//                                  width: 26,
-//                                  color: Colors.grey[600],
-//                                ),
-//                                Padding(
-//                                    padding: EdgeInsets.only(left: 5),
-//                                    child: Text(
-//                                      '3 Beds',
-//                                      style:
-//                                          Theme.of(context).textTheme.bodyText1,
-//                                    )),
-//                              ],
-//                            ),
-//                          ),
-//                          Row(
-//                            children: [
-//                              SvgPicture.asset(
-//                                'images/bath.svg',
-//                                width: 26,
-//                                color: Colors.grey[600],
-//                              ),
-//                              Padding(
-//                                  padding: EdgeInsets.only(left: 5),
-//                                  child: Text(
-//                                    '2 Baths',
-//                                    style:
-//                                        Theme.of(context).textTheme.bodyText1,
-//                                  )),
-//                            ],
-//                          )
-//                        ],
-//                      ),
-//                      Container(
-//                          padding: EdgeInsets.only(top: 5),
-////                          width: addressWidth,
-//                          child: Flexible(
-//                              child: Text(
-//                            '3rd st,Los Angeles, CA 90036',
-//                            style: Theme.of(context).textTheme.bodyText1,
-//                          )))
-//                    ],
-//                  ),
-//                  Spacer(),
-//                  Column(
-//                    children: [
-//                      Center(
-//                        child: Text(
-//                          '\$8,948',
-//                          style: TextStyle(
-//                              fontSize: 25,
-//                              color: Theme.of(context).accentColor,
-//                              fontWeight: FontWeight.bold),
-//                        ),
-//                      ),
-////                      Container(
-////                        child: Flexible(
-////                          child:
-//
-////                        ),
-////                      ),
-////                      Container(
-//////                          width: mortgageWidth,
-////                          child: Column(
-////                            children: [
-////                              Flexible(
-////                                  child: Text(
-////                                'Est. Mortgage \$113/mo',
-////                                style: Theme.of(context).textTheme.bodyText1,
-////                              )),
-////                              Flexible(
-////                                  child: Text(
-////                                '\$113/mo',
-////                                style: Theme.of(context).textTheme.bodyText1,
-////                              )),
-////                            ],
-////                          )),
-//                    ],
-//                  ),
-//                ],
-//              ),
-//            ),
-//          ],
-//        ),
-//      );
-//    }
-
     ListView _houseBuilder(houses) {
       return ListView.builder(
         shrinkWrap: true,
@@ -444,8 +327,8 @@ class HouseList extends StatelessWidget {
 //        physics: ScrollPhysics(),
         itemCount: houses.length,
         itemBuilder: (_, idx) => GestureDetector(
-          onTap: () => Navigator.of(context)
-              .pushNamed(HouseDetail.routeName, arguments: houses[idx]),
+          onTap: () => Navigator.pushNamed(context, HouseDetail.routeName,
+              arguments: houses[idx]),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             margin: EdgeInsets.only(bottom: 20, top: 20),
@@ -453,8 +336,8 @@ class HouseList extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  child: Image.asset(
-                    'images/liben.jfif',
+                  child: Image.network(
+                    'http://$Host/assets/attachedfiles/${houses[idx].asset}',
                     height: 200,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -471,12 +354,12 @@ class HouseList extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.only(bottom: 2),
                             width: 180,
-                            child: Flexible(
-                              child: Text(
-                                '${houses[idx].title}',
-                                style: Theme.of(context).textTheme.headline3,
-                              ),
+//                            child: Flexible(
+                            child: Text(
+                              '${houses[idx].title}',
+                              style: Theme.of(context).textTheme.headline3,
                             ),
+//                            ),
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -517,16 +400,18 @@ class HouseList extends StatelessWidget {
                                             .bodyText1,
                                       )),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                           Container(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Flexible(
-                                  child: Text(
-                                '${houses[idx].street},${houses[idx].city},${houses[idx].location}',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              )))
+                            padding: EdgeInsets.only(top: 5),
+//                              child: Flexible(
+                            child: Text(
+                              '${houses[idx].street}, ${houses[idx].city}, ${houses[idx].location}',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+//                              ),
+                          ),
                         ],
                       ),
                       Spacer(),
@@ -549,86 +434,297 @@ class HouseList extends StatelessWidget {
               ],
             ),
           ),
-//          Row(
-//            crossAxisAlignment: CrossAxisAlignment.start,
-//            children: <Widget>[
-//              Expanded(
-//                  flex: 2,
-//                  child: Container(
-//                    padding: EdgeInsets.only(left: 10, top: 10),
-//                    child: Image.asset(
-//                      'images/furniture.jpg',
-//                      fit: BoxFit.cover,
-//                    ),
-//                  )),
-//              Expanded(
-//                flex: 3,
-//                child: Container(
-//                  padding: EdgeInsets.only(right: 10, top: 10, left: 20),
-//                  child: Column(
-//                    crossAxisAlignment: CrossAxisAlignment.start,
-//                    children: <Widget>[
-//                      Text(
-//                        'Title: ${houses[idx].title}',
-//                        style: const TextStyle(
-//                          fontWeight: FontWeight.w500,
-//                          fontSize: 18.0,
-//                        ),
-//                      ),
-//                      const Padding(
-//                          padding: EdgeInsets.symmetric(vertical: 3.0)),
-//                      Text(
-//                        'Category: ${houses[idx].category}',
-//                        style: const TextStyle(fontSize: 15.0),
-//                      ),
-//                      const Padding(
-//                          padding: EdgeInsets.symmetric(vertical: 2.0)),
-//                      Text(
-//                        'Status: ${houses[idx].status}',
-//                        style: const TextStyle(fontSize: 15.0),
-//                      ),
-//                    ],
-//                  ),
-//                ),
-//              ),
-//            ],
-//          ),
         ),
       );
     }
 
     return Scaffold(
-      body: BlocBuilder<HouseBloc, HouseState>(
+      body: RefreshIndicator(
+        onRefresh: ()async => BlocProvider.of<HouseBloc>(context).add(HouseLoad()),
+        child: BlocBuilder<HouseBloc, HouseState>(
+          builder: (_, state) {
+            if (state is HouseOperationFailure) {
+              return Container(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'images/not_found.svg',
+                        height: 200,
+                      ),
+                      Text('Could not do House operation')
+                    ],
+                  ));
+            }
+
+            if (state is HousesLoadSuccess) {
+              final houses = state.houses;
+
+              return ListView(
+                children: <Widget>[
+                  titleSection,
+                  inputSection,
+                  suggestionSection,
+                  nearYouSection,
+                  _recentSearchesSection,
+                  _houseBuilder(houses),
+                ],
+              );
+            }
+
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
+  }
+}
+
+
+class DataSearch extends SearchDelegate<String> {
+  List<House> houses = [];
+
+  Set<String> recentHouses = {};
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = "";
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow,
+          progress: transitionAnimation,
+        ),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return  BlocBuilder<HouseBloc, HouseState>(
         builder: (_, state) {
           if (state is HouseOperationFailure) {
-            return Text('Could not do House operation');
+            return Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'images/not_found.svg',
+                      height: 200,
+                    ),
+                    Text('Could not do search operation')
+                  ],
+                ));
           }
 
           if (state is HousesLoadSuccess) {
-            final houses = state.houses;
-
-            return ListView(
-              children: <Widget>[
-                titleSection,
-                inputSection,
-                suggestionSection,
-                nearYouSection,
-                _recentSearchesSection,
-                _houseBuilder(houses),
-              ],
+            final houses = state.houses.where((house) => house.city == query);
+            return ListView.builder(
+//         shrinkWrap: true,
+//         physics: NeverScrollableScrollPhysics(),
+//        physics: ScrollPhysics(),
+              itemCount: houses.length,
+              itemBuilder: (_, idx) => GestureDetector(
+                onTap: () => Navigator.pushNamed(context, HouseDetail.routeName,
+                    arguments: houses.elementAt(idx)),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  margin: EdgeInsets.only(bottom: 20, top: 20),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        child: Image.network(
+                          'http://$Host/assets/attachedfiles/${houses.elementAt(idx).asset}',
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(bottom: 2),
+                                  width: 180,
+//                             child: Flexible(
+                                  child: Text(
+                                    '${houses.elementAt(idx).title}',
+                                    style: Theme.of(context).textTheme.headline3,
+                                  ),
+//                             ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 8),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'images/bed.svg',
+                                            width: 26,
+                                            color: Colors.grey[600],
+                                          ),
+                                          Padding(
+                                              padding: EdgeInsets.only(left: 5),
+                                              child: Text(
+                                                '${houses.elementAt(idx).bedrooms} Beds',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1,
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'images/bath.svg',
+                                          width: 26,
+                                          color: Colors.grey[600],
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              '${houses.elementAt(idx).bathrooms} Baths',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                            )),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 5),
+//                                child: Flexible(
+                                    child: Text(
+                                      '${houses.elementAt(idx).street}, ${houses.elementAt(idx).city}, ${houses.elementAt(idx).location}',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+//                                ),
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            Column(
+                              children: [
+                                Center(
+                                  child: Text(
+                                    '\$${houses.elementAt(idx).cost}',
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        color: Theme.of(context).accentColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
           }
-
           return Center(child: CircularProgressIndicator());
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed(
-          AddUpdateHouse.routeName,
-          arguments: HouseArgument(edit: false),
-        ),
-        child: Icon(Icons.add),
-      ),
     );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return BlocBuilder<HouseBloc, HouseState>(builder: (context, houseState) {
+      if (houseState is HouseOperationFailure) {
+        return Container(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'images/not_found.svg',
+                height: 200,
+              ),
+              Text('Could not do search operation')
+            ],
+          ),
+        );
+      }
+      if (houseState is HousesLoadSuccess) {
+        for (var house in houseState.houses) {
+          recentHouses.add(house.city);
+        }
+        houses = houseState.houses;
+        final suggestionList = query.isEmpty
+            ? recentHouses
+            : recentHouses.where((p) => p.startsWith(query));
+
+        if (suggestionList.isEmpty) {
+          return Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'images/not_found.svg',
+                  height: 200,
+                ),
+                Text('no results found')
+              ],
+            ),
+          );
+        }
+        return ListView.builder(
+          itemBuilder: (context, index) => ListTile(
+              onTap: () {
+                showResults(context);
+                query = recentHouses.elementAt(index);
+              },
+              leading: Icon(Icons.location_city),
+              title: RichText(
+                text: TextSpan(
+                    text: suggestionList
+                        .elementAt(index)
+                        .substring(0, query.length),
+                    style: TextStyle(
+                        color: Colors.black87, fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(
+                          text: suggestionList
+                              .elementAt(index)
+                              .substring(query.length),
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor))
+                    ]),
+              )),
+          itemCount: suggestionList.length,
+        );
+      }
+    });
   }
 }

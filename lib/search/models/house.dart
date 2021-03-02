@@ -35,20 +35,20 @@ class House extends Equatable {
 
   @override
   List<Object> get props => [
-        id,
-        title,
-        description,
-        bedrooms,
-        bathrooms,
-        cost,
-        street,
-        city,
-        location,
-        status,
-        category,
-        userId,
-        asset
-      ];
+    id,
+    title,
+    description,
+    bedrooms,
+    bathrooms,
+    cost,
+    street,
+    city,
+    location,
+    status,
+    category,
+    userId,
+    asset
+  ];
 
   factory House.fromJson(Map<String, dynamic> json) {
     return House(

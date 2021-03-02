@@ -1,10 +1,10 @@
 import 'package:meta/meta.dart';
 import 'package:labjobfeature/house/house.dart';
 
-class HouseRepository{
+class HouseRepository {
   final HouseDataProvider dataProvider;
 
-  HouseRepository({@required this.dataProvider}):assert(dataProvider != null);
+  HouseRepository({@required this.dataProvider}) : assert(dataProvider != null);
 
   Future<House> createHouse(House house) async {
     return await dataProvider.createHouse(house);
@@ -14,12 +14,11 @@ class HouseRepository{
     return await dataProvider.getHouses();
   }
 
-  Future<void> updateHouse(House house) async{
+  Future<void> updateHouse(House house) async {
     return await dataProvider.updateHouse(house);
   }
 
-  Future<void> deleteHouse(String id) async{
+  Future<void> deleteHouse(String id) async {
     return await dataProvider.deleteHouse(id);
   }
-
 }
